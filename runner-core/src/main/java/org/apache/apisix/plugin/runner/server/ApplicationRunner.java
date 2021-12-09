@@ -74,6 +74,7 @@ public class ApplicationRunner implements CommandLineRunner {
         }
         this.server = tcpServer.bindNow();
         logger.warn("java runner is listening on the socket file: {}", socketFile);
+        Runtime.getRuntime().exec("chmod 766 " + socketFile);
 
         // delete socket file when tcp server shutdown
         Runtime.getRuntime()
