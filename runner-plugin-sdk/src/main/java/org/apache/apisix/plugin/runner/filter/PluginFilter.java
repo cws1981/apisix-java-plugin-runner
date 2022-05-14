@@ -19,9 +19,10 @@ package org.apache.apisix.plugin.runner.filter;
 
 import org.apache.apisix.plugin.runner.HttpRequest;
 import org.apache.apisix.plugin.runner.HttpResponse;
+import org.pf4j.ExtensionPoint;
 import reactor.core.publisher.Mono;
 
-public interface PluginFilter {
+public interface PluginFilter extends ExtensionPoint {
 
     String name();
 

@@ -70,5 +70,10 @@
             <artifactId>reactor-core</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.pf4j</groupId>
+            <artifactId>pf4j</artifactId>
+            <version>3.5.0</version>
+        </dependency>
     </dependencies>
 </project>

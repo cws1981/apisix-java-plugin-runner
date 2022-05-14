@@ -27,12 +27,16 @@ import org.apache.apisix.plugin.runner.A6Response;
 import org.apache.apisix.plugin.runner.HttpRequest;
 import org.apache.apisix.plugin.runner.HttpResponse;
 import org.apache.apisix.plugin.runner.filter.PluginFilter;
+import org.pf4j.DefaultPluginManager;
+import org.pf4j.PluginManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,9 +47,15 @@ import java.util.stream.Collectors;
 public class A6HandlerConfiguration {
     private final Logger logger = LoggerFactory.getLogger(A6HandlerConfiguration.class);
 
+    @Value("${plugin.path:/opt/plugin/}")
+    private String pluginPath;
+
     @Bean
-    public A6ConfigHandler createConfigHandler(Cache<Long, A6Conf> cache, ObjectProvider<PluginFilter> beanProvider) {
-        List<PluginFilter> pluginFilterList = beanProvider.orderedStream().collect(Collectors.toList());
+    public A6ConfigHandler createConfigHandler(Cache<Long, A6Conf> cache) {
+        PluginManager pluginManager = new DefaultPluginManager(Paths.get(pluginPath));
+        pluginManager.loadPlugins();
+        pluginManager.startPlugins();
+        List<PluginFilter> pluginFilterList = pluginManager.getExtensions(PluginFilter.class);
         Map<String, PluginFilter> filterMap = new HashMap<>();
         for (PluginFilter filter : pluginFilterList) {
             filterMap.put(filter.name(), filter);
